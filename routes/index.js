@@ -16,13 +16,13 @@ router.get('/jobs', function(req, res, next) {
 });
 
 router.post('/findjobs', function(req, res, next) {
-  if(req.body.location === '') {
+  /*(if(req.body.location === '') {
     req.body.location = null;
   } 
   if(req.body.skillsandexp === '') {
     req.body.skillsandexp = null;
-  } 
-  pool.query('SELECT * FROM Students WHERE Location LIKE ? OR Experience LIKE ?;', [
+  } */
+  pool.query('SELECT * FROM Students WHERE Location LIKE ? AND Experience LIKE ?;', [
     "%" + req.body.location + "%", "%" + req.body.skillsandexp + "%"
   ], (err, results) => {
     if(err) {
