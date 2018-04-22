@@ -55,9 +55,9 @@ block content
             form(action='#')
                 .row
                     .form-group.col-xs-12.col-sm-4
-                        input.form-control(placeholder='Keyword: job title, skills, or company', type='text')
+                        input#skill.form-control(placeholder='Keyword: job title, skills, or company', type='text')
                     .form-group.col-xs-12.col-sm-4
-                        input.form-control(placeholder='Location: city, state or zip', type='text')
+                        input#location.form-control(placeholder='Location: city, state or zip', type='text')
                     .form-group.col-xs-12.col-sm-4
                         .btn-group.bootstrap-select.show-tick.form-control
                             select.form-control.selectpicker(tabindex='-98')
@@ -129,7 +129,7 @@ block content
                                     small (39)
                 .button-group
                     .action-buttons
-                        button.btn.btn-primary Apply filter
+                        button.btn.btn-primary New Search
     // END Page header
     // Main container
     main
@@ -166,8 +166,8 @@ block scripts
         var results = !{JSON.stringify(results || null)};
        createResults(results);
 
-        $('button.btn.btn-primary').on('click', function() {
-            let newResults = [];
+        function searcher(results) {
+            var newResults = [];
 
             var filters = {
                 pay: 0,
@@ -192,9 +192,9 @@ block scripts
                 }
             });
 
-            for(var i = 0; i < results.length; i++) {
-                var student = results[i];
-                
+            for(var i = 0; i < results.results.length; i++) {
+                var student = results.results[i];
+
                 // pay filter
                 if(student.Paid == filters.pay || filters.pay == 2) {
                     var avai = student.Availability.split(',');
@@ -215,6 +215,21 @@ block scripts
 
                 return true;
             }
+        }
+
+        $('button.btn.btn-primary').on('click', function() {
+            $.post({
+                type: "POST",
+                url: '/search',
+                data: {
+                    location: $('#location').val(),
+                    skill: $('#skill').val()
+                },
+                success: function(data) {
+                    console.log(data);
+                    searcher(data);
+                }
+            })
 
             return false;
         }); 

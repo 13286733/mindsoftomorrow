@@ -15,6 +15,18 @@ router.get('/jobs', function(req, res, next) {
   res.render('jobs');
 });
 
+router.post('/search', function(req, res, next) {
+  pool.query('SELECT * FROM Students WHERE Location LIKE ? AND Experience LIKE ?;', [
+    "%" + req.body.location + "%", "%" + req.body.skill + "%"
+  ], (err, results) => {
+    if(err) {
+      console.log(err);
+      res.send({ results: [] });
+    }
+    res.send({ results: results });
+  });
+})
+
 router.post('/find', function(req, res, next) {
   pool.query('SELECT * FROM Students WHERE Location LIKE ? AND Experience LIKE ?;', [
     "%" + req.body.location + "%", "%" + req.body.skillsandexp + "%"
