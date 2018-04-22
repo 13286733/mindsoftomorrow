@@ -1,0 +1,95 @@
+extends layout
+
+block content
+  // Site header
+  header.site-header.size-lg.text-center(style="background-image: url('https://images.adsttc.com/media/images/5994/a491/b22e/384f/7400/00d1/large_jpg/01_AERIAL.0_(1).jpg?1502913677')")
+    .container
+      .col-xs-12
+        br
+        br
+        h2
+          | Your
+          mark partnership
+          |  starts now!
+        h5.font-alt For students and industry organisations
+        br
+        br
+        br
+        form.header-job-search(action='/findjobs', method='POST')
+          .input-keyword
+            input.form-control(placeholder='Skills or experience', type='text', name='skillsandexp')
+          .input-location
+            input.form-control(placeholder='City, state or zip', type='text', name='location')
+          .btn-search
+            button.btn.btn-primary(type='submit') Find students
+            a(href='/jobs') Advanced Job Search
+  // END Site header
+  // Main container
+  main
+    // Recent jobs
+    section
+      .container
+        header.section-header
+          span Latest
+          h2 Upcoming Events
+        .row.item-blocks-connected
+          // Event item
+          .col-xs-12
+            a.item-block(href='/eventdetail')
+              header
+                img(src='assets/logo-google.jpg', alt='')
+                .hgroup
+                  h4 Code2Learn Hackathon
+                  h5 WiseTech Global
+                .header-meta
+                  span.location Building 11, Level 4, Ultimo NSW 2007
+                  span.label.label-success Sat 21 April 2018, 9:00 AM
+          // END Event item
+          // Event item
+          .col-xs-12
+            a.item-block(href='/eventdetail')
+              header
+                img(src='assets/logo-google.jpg', alt='')
+                .hgroup
+                  h4 FEIT Resume Workshop for Women in Engineering and IT
+                  h5 UTS WiEIT
+                .header-meta
+                  span.location Building 11, Level 3, Room 301, Ultimo NSW 2007
+                  span.label.label-success Thu 3 May 2018, 10:00 AM
+          // END Event item
+          // Event item
+          .col-xs-12
+            a.item-block(href='/eventdetail')
+              header
+                img(src='assets/logo-google.jpg', alt='')
+                .hgroup
+                  h4 Nursing and Midwifery Careers Fair
+                  h5 UTS Career Fairs
+                .header-meta
+                  span.location Aerial Function Centre, Ultimo NSW 2007
+                  span.label.label-success Thu 24 May 2018, 10:00 AM
+          // END Event item
+    // END Recent jobs
+    // How it works
+    section
+      .container
+        //
+          <header class="section-header">
+          <h2>About us</h2>
+          </header>
+        .col-sm-12.col-md-6
+          header.section-header.text-left
+            span Workflow
+            h2 How it works
+          p.lead We turn kids into adults.
+          p Come find a job so we get commission
+          br
+          br
+          a.btn.btn-primary(href='/learnmore') Learn more
+        .col-sm-12.col-md-6.hidden-xs.hidden-sm
+          br
+          img.center-block(src='assets/how-it-works.png', alt='how it works')
+    // END How it works
+    // Newsletter
+    // END Newsletter
+  // END Main container
