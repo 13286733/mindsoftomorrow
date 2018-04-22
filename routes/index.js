@@ -22,7 +22,6 @@ router.post('/findjobs', function(req, res, next) {
   if(req.body.skillsandexp === '') {
     req.body.skillsandexp = null;
   } 
-  console.log(req.body)
   pool.query('SELECT * FROM Students WHERE Location LIKE ? OR Experience LIKE ?;', [
     "%" + req.body.location + "%", "%" + req.body.skillsandexp + "%"
   ], (err, results) => {
