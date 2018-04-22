@@ -49,7 +49,7 @@ block content
     // Page header
     header.page-header.bg-img(style="background-image: url('https://www.nerdwallet.com/assets/blog/wp-content/uploads/2015/10/interns.jpg');")
         .container.page-name
-            h1.text-center Browse jobs
+            h1.text-center Browse resumes
             p.lead.text-center Use following search box to find resumes that fits your needs better
         .container
             form(action='#')
@@ -93,37 +93,37 @@ block content
                         h6 Availability
                         #avail_box.checkall-group
                             .checkbox
-                                input#monday(name='monday', type='checkbox', value='on')
+                                input#monday(name='0', type='checkbox', value='on')
                                 label(for='monday')
                                     | Monday
                                     small (364)
                             .checkbox
-                                input#tuesday(name='tuesday', type='checkbox', value='on')
+                                input#tuesday(name='1', type='checkbox', value='on')
                                 label(for='tuesday')
                                     | Tuesday
                                     small (684)
                             .checkbox
-                                input#Wednesday(name='Wednesday', type='checkbox', value='on')
+                                input#Wednesday(name='2', type='checkbox', value='on')
                                 label(for='Wednesday')
                                     | Wednesday
                                     small (195)
                             .checkbox
-                                input#Thursday(name='Thursday', type='checkbox', value='on')
+                                input#Thursday(name='3', type='checkbox', value='on')
                                 label(for='Thursday')
                                     | Thursday
                                     small (39)
                             .checkbox
-                                input#Friday(name='Friday', type='checkbox', value='on')
+                                input#Friday(name='4', type='checkbox', value='on')
                                 label(for='Friday')
                                     | Friday
                                     small (39)
                             .checkbox
-                                input#Saturday(name='Saturday', type='checkbox', value='on')
+                                input#Saturday(name='5', type='checkbox', value='on')
                                 label(for='Saturday')
                                     | Saturday
                                     small (39)
                             .checkbox
-                                input#Sunday(name='Sunday', type='checkbox', value='on')
+                                input#Sunday(name='6', type='checkbox', value='on')
                                 label(for='Sunday')
                                     | Sunday
                                     small (39)
@@ -131,3 +131,119 @@ block content
                     .action-buttons
                         button.btn.btn-primary Apply filter
     // END Page header
+    // Main container
+    main
+        section.no-padding-top.bg-alt
+            .container
+                .row
+                    .col-xs-12
+                        br
+                        h5
+                            | We found 
+                            strong#ress #{results.length}
+                            |  matches
+                    // Job item
+                
+                #results
+                    
+                    // END Job item
+                // Page navigation
+                nav.text-center
+                    ul.pagination
+                        li
+                            a(href='#', aria-label='Previous')
+                                i.fa.fa-angle-left
+                        li.active
+                            a(href='#') 1
+                        li
+                            a(href='#', aria-label='Next')
+                                i.fa.fa-angle-right
+                // END Page navigation
+    // END Main container
+
+block scripts
+    script.
+        var results = !{JSON.stringify(results || null)};
+       createResults(results);
+
+        $('button.btn.btn-primary').on('click', function() {
+            let newResults = [];
+
+            var filters = {
+                pay: 0,
+                days: [0, 0, 0, 0, 0, 0, 0]
+            };
+
+            $('input:checked').each(function() {
+                var filter = $(this).attr('name').toLowerCase();
+                if(isNaN(filter)) {
+                    // paid or unpaid
+                    if(filter.indexOf('both') !== -1) {
+                        filters.pay = 2;
+                    } else {
+                        if(filter == 'paid') {
+                            filters.pay = 1;
+                        } else {
+                            filters.pay = 0;
+                        }
+                    }
+                } else {
+                    filters.days[filter] = 1;
+                }
+            });
+
+            for(var i = 0; i < results.length; i++) {
+                var student = results[i];
+                
+                // pay filter
+                if(student.Paid == filters.pay || filters.pay == 2) {
+                    var avai = student.Availability.split(',');
+                    if(matchDays(avai)) {
+                        newResults.push(student);
+                    }
+                }
+            }
+
+            createResults(newResults);
+
+            function matchDays(avai) {
+                for(var i = 0; i < filters.days.length; i++) {
+                    if(filters.days[i] == 1 && avai[i] == 0) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }); 
+
+        function createResults(results) {
+            var html = "";
+
+            $('#ress').html(results.length);
+            results.forEach(function(student) {
+                var availability = student.Availability.split(',').reduce((a, b) => { return Number(a) + Number(b) });
+                html += `<div class="col-xs-12">
+                    <a class="item-block" href="/details">
+                    <header>
+                        <div class="hgroup">
+                            <h4>` + student.Name + `</h4>
+                            <h5>` + student.Education + `<span class="label label-success">Full-time</span></h5>
+                    </header>
+                    <div class="item-body">
+                        <p>` + student.Experience + `</p>
+                    </div>
+                    <footer>
+                        <ul class="details cols-3">
+                            <li><i class="fa fa-map-marker"></i><span>` + student.Location + `</span></li>
+                            <li><i class="fa fa-money"></i> Paid<!--<span>$90,000 - $110,000 / year</span>--></li>
+                            <li><i class="fa fa-certificate"></i><span>Available ` + availability + ` days</span></li>
+                        </ul>
+                    </footer></a>
+                </div>`;
+            });
+
+            $('#results').html(html);
+        }
